@@ -1,0 +1,3 @@
+install "Noto_Serif_Bengali" font
+install HeroUI: npm i @heroui/styles @heroui/react
+install DaisyUI: npm install tailwindcss @tailwindcss/postcss daisyui@latest
