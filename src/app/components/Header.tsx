@@ -14,7 +14,7 @@ const Header = () => {
         {/* Left Side - Logo & Brand */}
         <div className="flex items-center gap-3">
           <Image
-            src="/public/assets/Stack.png"
+            src="/assets/Stack.png"
             alt="বাজার দর"
             width={60}
             height={60}
