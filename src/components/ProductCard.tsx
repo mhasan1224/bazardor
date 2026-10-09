@@ -15,7 +15,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
 
   return (
     <Link
-      href={`/product/${product.slug}`}
+      href={`/product/${product.id}`}
       aria-label={`${product.nameBn} — আজকের দাম ${formatBengaliNumber(product.today)} টাকা`}
       className="group block rounded-xl border border-[#dce6dd] bg-[#fbfdfb] p-3 transition-all duration-200 hover:-translate-y-0.5 hover:border-green-300 hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
     >

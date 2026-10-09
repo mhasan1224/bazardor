@@ -1,5 +1,4 @@
 import Link from "next/link";
-import React from "react";
 
 interface NavItems {
   id: number;
@@ -13,14 +12,21 @@ const Navlinks = async () => {
     "https://api.abcz.workers.dev/api/bazardor/categories",
   );
 
-  const data = await res.json();
-  const navs: NavItems[] = data;
+  if (!res.ok) {
+    throw new Error("Failed to fetch categories");
+  }
+
+  const navs: NavItems[] = await res.json();
 
   return (
     <nav className="container mx-auto px-4 md:px-6 lg:px-8">
-      <div className="flex items-center justify-start gap-6 py-3 text-lg">
+      <div className="flex items-center justify-start gap-6 overflow-x-auto py-3 text-lg">
         {navs.map((link) => (
-          <Link key={link.slug} href={link.slug}>
+          <Link
+            key={link.slug}
+            href={`/category/${link.slug}`}
+            className="shrink-0 transition-colors hover:text-green-700"
+          >
             {link.icon} {link.nameBn}
           </Link>
         ))}

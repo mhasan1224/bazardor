@@ -1,10 +1,17 @@
-
 import type { Product } from "@/types/product";
 
-const productService = async (): Promise<Product[]> => {
-  const res = await fetch(
+const productService = async (
+  category?: string,
+): Promise<Product[]> => {
+  const url = new URL(
     "https://api.abcz.workers.dev/api/bazardor/products",
   );
+
+  if (category) {
+    url.searchParams.set("category", category);
+  }
+
+  const res = await fetch(url.toString());
 
   if (!res.ok) {
     throw new Error(`Failed to fetch products: ${res.status}`);
@@ -13,6 +20,22 @@ const productService = async (): Promise<Product[]> => {
   const products: Product[] = await res.json();
 
   return products;
+};
+
+export const getProductById = async (
+  id: number,
+): Promise<Product> => {
+  const res = await fetch(
+    `https://api.abcz.workers.dev/api/bazardor/products/${id}`,
+  );
+
+  if (!res.ok) {
+    throw new Error(`Failed to fetch product: ${res.status}`);
+  }
+
+  const product: Product = await res.json();
+
+  return product;
 };
 
 export default productService;

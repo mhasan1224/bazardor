@@ -12,28 +12,31 @@ export default async function Home() {
     (product) => product.change.dir === "down",
   );
   return (
-    <div>
-      {" "}
-      <MarqueeText />
-      <Banner />{" "}
+  <div className="bg-[#f2f6f3]">
+    <MarqueeText />
+
+    <Banner />
+
+    <main className="bg-[#f2f6f3]">
       <ProductSection
         title="আজ দাম বেড়েছে"
-        // subtitle="যেসব পণ্যের দাম আজ বেড়েছে"
         products={increasedProducts}
         id="price-increased"
       />
+
       <ProductSection
         title="আজ দাম কমেছে"
-        // subtitle="যেসব পণ্যের দাম আজ কমেছে"
         products={decreasedProducts}
         id="price-decreased"
       />
+
       <ProductSection
         title="সব পণ্য"
-        subtitle="মোট ৩৩টি পণ্য দেখানো হচ্ছে"
+        subtitle={`মোট ${products.length}টি পণ্য দেখানো হচ্ছে`}
         products={products}
         id="products"
-      />{" "}
-    </div>
-  );
+      />
+    </main>
+  </div>
+);
 }
