@@ -2,41 +2,46 @@ import MarqueeText from "../components/Marquee";
 import Banner from "../components/Banner";
 import ProductSection from "@/components/ProductSection";
 import productService from "@/services/product.service";
+
 export default async function Home() {
   const products = await productService();
-  const increasedProducts = products.filter(
-    (product) => product.change.dir === "up",
-  );
 
-  const decreasedProducts = products.filter(
-    (product) => product.change.dir === "down",
-  );
+  const increasedProducts = products
+    .filter((product) => product.change.dir === "up")
+    .sort((a, b) => b.change.pct - a.change.pct)
+    .slice(0, 6);
+
+  const decreasedProducts = products
+    .filter((product) => product.change.dir === "down")
+    .sort((a, b) => b.change.pct - a.change.pct)
+    .slice(0, 6);
+
   return (
-  <div className="bg-[#f2f6f3]">
-    <MarqueeText />
+    <div className="bg-[#f2f6f3]">
+      <MarqueeText />
 
-    <Banner />
+      <Banner />
 
-    <main className="bg-[#f2f6f3]">
-      <ProductSection
-        title="আজ দাম বেড়েছে"
-        products={increasedProducts}
-        id="price-increased"
-      />
+      <main className="bg-[#f2f6f3]">
+        <ProductSection
+          title="আজ দাম বেড়েছে"
+          products={increasedProducts}
+          id="price-increased"
+        />
 
-      <ProductSection
-        title="আজ দাম কমেছে"
-        products={decreasedProducts}
-        id="price-decreased"
-      />
+        <ProductSection
+          title="আজ দাম কমেছে"
+          products={decreasedProducts}
+          id="price-decreased"
+        />
 
-      <ProductSection
-        title="সব পণ্য"
-        subtitle={`মোট ${products.length}টি পণ্য দেখানো হচ্ছে`}
-        products={products}
-        id="products"
-      />
-    </main>
-  </div>
-);
+        <ProductSection
+          title="সব পণ্য"
+          subtitle={`মোট ${new Intl.NumberFormat("bn-BD").format(products.length)}টি পণ্য দেখানো হচ্ছে`}
+          products={products}
+          id="products"
+        />
+      </main>
+    </div>
+  );
 }

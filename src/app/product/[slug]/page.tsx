@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getProductById } from "@/services/product.service";
 import type { Product } from "@/types/product";
-import { link } from "fs";
+
 
 interface ProductDetailsPageProps {
   params: Promise<{
@@ -260,7 +260,7 @@ export default async function ProductDetailsPage({
         <div className="border-t border-[#dce6dd] py-6">
           <Link
             href={`/category/${product.category}`}
-            className="inline-flex items-center gap-2 rounded-lg bg-[#f2f6f3] px-5 py-3 font-semibold text-white shadow-sm transition hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+            className="inline-flex items-center gap-2 rounded-lg bg-[#008a45] px-5 py-3 font-semibold text-white shadow-sm transition hover:bg-[#007038] focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
           >
             <span aria-hidden="true">{product.categoryIcon}</span>
             <span>{product.categoryNameBn}</span>

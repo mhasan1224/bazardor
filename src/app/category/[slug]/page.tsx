@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import ProductSection from "@/components/ProductSection";
+import CategoryProductList from "@/components/CategoryProductList";
 import productService from "@/services/product.service";
 
 interface CategoryPageProps {
@@ -20,12 +20,10 @@ export default async function CategoryPage({
   }
 
   return (
-    <main className="min-h-screen bg-[#f2f6f3] px-4 py-6 md:px-6">
-      <ProductSection
-        title={products[0].categoryNameBn}
-        subtitle={`${products.length}টি পণ্য পাওয়া গেছে`}
-        products={products}
-      />
-    </main>
-  );
+  <main className="min-h-screen bg-[#f2f6f3] px-4 py-6 md:px-6">
+    <section className="container mx-auto py-5">
+      <CategoryProductList products={products} />
+    </section>
+  </main>
+);
 }

@@ -2,15 +2,16 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   reactCompiler: true,
+
   images: {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "api.abcz.workers.dev",
+        hostname: "api.api-store.workers.dev",
       },
       {
         protocol: "https",
-        hostname: "**", 
+        hostname: "**",
       },
     ],
   },

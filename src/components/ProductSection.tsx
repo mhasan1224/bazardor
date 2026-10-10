@@ -15,7 +15,7 @@ const ProductSection = ({
   id,
 }: ProductSectionProps) => {
   return (
-    <section id={id} className="container mx-auto py-5 ">
+    <section id={id} className="container mx-auto scroll-mt-36 py-5 ">
       <div className="mb-4">
         <h2 className="flex items-center gap-2 text-lg font-bold text-gray-900 sm:text-xl">
           {title === "আজ দাম বেড়েছে" && (

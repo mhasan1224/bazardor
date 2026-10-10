@@ -3,3 +3,15 @@ install HeroUI: npm i @heroui/styles @heroui/react
 install DaisyUI: npm install tailwindcss @tailwindcss/postcss daisyui@latest
 install Marquee: npm i react-fast-marquee
 install lucide-react: npm install lucide-react
+install better-auth & mongodb: npm install better-auth mongodb
+install mongodb adaptar: npm install @better-auth/mongo-adapter
+
+
+
+
+
+Authentication Method: Password
+
+Username: bazardor_user_auth
+
+Password: itXdXfLYzlahFeW6

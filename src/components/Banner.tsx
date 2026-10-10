@@ -11,7 +11,7 @@ const Banner = () => {
     description:
       "চাল, ডাল, তেল, সবজি, মাছ, মাংস, ডিম ও মসলার দাম — বাজারভিত্তিক বিস্তারিত, গড়, সর্বনিম্ন-সর্বাধিক এবং দামের পরিবর্তন এক জায়গায়।",
     buttonText: "সব পণ্য দেখুন",
-    buttonLink: "/products",
+    buttonLink: "/#products",
     image: "/assets/bazar-hero.png",
     imageAlt: "বাজারের বিভিন্ন পণ্যের ঝুড়ি",
   };
@@ -61,6 +61,7 @@ const Banner = () => {
                   priority
                   className="h-auto w-full object-contain"
                 />
+                
               </div>
             </div>
           </div>
