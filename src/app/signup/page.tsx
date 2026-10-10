@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -18,45 +19,63 @@ import { authClient } from "@/lib/auth-client";
 export default function SignUpPage() {
   const router = useRouter();
 
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const handleSubmit = async (
+  e: React.FormEvent<HTMLFormElement>,
+) => {
+    e.preventDefault();
     setError("");
 
-    const formData = new FormData(event.currentTarget);
+    const formData = new FormData(e.currentTarget);
 
     const name = String(formData.get("name") ?? "").trim();
     const email = String(formData.get("email") ?? "").trim();
-    const passwordValue = String(formData.get("password") ?? "");
-    const confirmPasswordValue = String(formData.get("confirmPassword") ?? "");
+    const passwordValue = password;
 
-    if (passwordValue !== confirmPasswordValue) {
+    if (name.length < 3) {
+      setError("নাম কমপক্ষে ৩ অক্ষরের হতে হবে।");
+      return;
+    }
+
+    if (passwordValue.length < 8) {
+      setError("পাসওয়ার্ড কমপক্ষে ৮ অক্ষরের হতে হবে।");
+      return;
+    }
+
+    if (passwordValue !== confirmPassword) {
       setError("পাসওয়ার্ড দুটি মিলছে না।");
       return;
     }
 
-    setLoading(true);
-
     try {
-      const result = await authClient.signUp.email({
-        name,
-        email,
-        password: passwordValue,
-      });
-
-      if (result.error) {
-        setError(result.error.message ?? "অ্যাকাউন্ট তৈরি করা যায়নি।");
-        return;
-      }
-
-      router.push("/signin");
-      router.refresh();
+      await authClient.signUp.email(
+        {
+          name,
+          email,
+          password: passwordValue,
+          callbackURL: "/",
+        },
+        {
+          onRequest: () => {
+            setLoading(true);
+          },
+          onSuccess: () => {
+            router.replace("/");
+            router.refresh();
+          },
+          onError: (ctx) => {
+            setError(
+              ctx.error.message || "অ্যাকাউন্ট তৈরি করা যায়নি।",
+            );
+          },
+        },
+      );
     } catch {
-      setError("কিছু একটা সমস্যা হয়েছে। আবার চেষ্টা করো।");
+      setError("অ্যাকাউন্ট তৈরি করা যায়নি। আবার চেষ্টা করুন।");
     } finally {
       setLoading(false);
     }
@@ -74,9 +93,10 @@ export default function SignUpPage() {
             বিনা খরচে সাইন আপ করে সব বিস্তারিত দাম দেখুন।
           </p>
         </div>
+
         <Form
           onSubmit={handleSubmit}
-          className="w-full max-w-md rounded border border-gray-200 bg-white p-6 shadow-sm sm:p-8"
+          className="w-full rounded-xl border border-gray-200 bg-white p-6 shadow-sm sm:p-8"
         >
           <Fieldset className="w-full">
             <FieldGroup>
@@ -90,13 +110,19 @@ export default function SignUpPage() {
                 }
               >
                 <Label>নাম</Label>
-                <Input autoComplete="name" placeholder="যেমন: রহিম উদ্দিন" />
+                <Input
+                  autoComplete="name"
+                  placeholder="যেমন: রহিম উদ্দিন"
+                />
                 <FieldError />
               </TextField>
 
               <TextField isRequired name="email" type="email">
                 <Label>ইমেইল</Label>
-                <Input autoComplete="email" placeholder="you@example.com" />
+                <Input
+                  autoComplete="email"
+                  placeholder="you@example.com"
+                />
                 <FieldError />
               </TextField>
 
@@ -104,21 +130,18 @@ export default function SignUpPage() {
                 isRequired
                 name="password"
                 type="password"
-                minLength={8}
-                validate={(value) => {
-                  if (value.length < 8) {
-                    return "পাসওয়ার্ড কমপক্ষে ৮ অক্ষরের হতে হবে";
-                  }
-
-                  return null;
-                }}
+                validate={(value) =>
+                  value.length < 8
+                    ? "পাসওয়ার্ড কমপক্ষে ৮ অক্ষরের হতে হবে"
+                    : null
+                }
               >
                 <Label>পাসওয়ার্ড</Label>
                 <Input
                   autoComplete="new-password"
                   placeholder="কমপক্ষে ৮ অক্ষর"
                   value={password}
-                  onChange={(event) => setPassword(event.target.value)}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
                 <FieldError />
               </TextField>
@@ -128,7 +151,9 @@ export default function SignUpPage() {
                 name="confirmPassword"
                 type="password"
                 validate={(value) =>
-                  value !== password ? "পাসওয়ার্ড দুটি মিলছে না" : null
+                  value !== password
+                    ? "পাসওয়ার্ড দুটি মিলছে না"
+                    : null
                 }
               >
                 <Label>পাসওয়ার্ড নিশ্চিত করুন</Label>
@@ -136,14 +161,17 @@ export default function SignUpPage() {
                   autoComplete="new-password"
                   placeholder="আবার লিখুন"
                   value={confirmPassword}
-                  onChange={(event) => setConfirmPassword(event.target.value)}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
                 />
                 <FieldError />
               </TextField>
             </FieldGroup>
 
             {error && (
-              <p role="alert" className="text-sm text-red-600">
+              <p
+                role="alert"
+                className="text-sm font-medium text-red-600"
+              >
                 {error}
               </p>
             )}
@@ -152,9 +180,11 @@ export default function SignUpPage() {
               <Button
                 type="submit"
                 isDisabled={loading}
-                className="w-full bg-success text-white"
+                className="w-full bg-[#008a45] text-white hover:bg-[#007038]"
               >
-                {loading ? "অ্যাকাউন্ট তৈরি হচ্ছে..." : "অ্যাকাউন্ট তৈরি করুন"}
+                {loading
+                  ? "অ্যাকাউন্ট তৈরি হচ্ছে..."
+                  : "অ্যাকাউন্ট তৈরি করুন"}
               </Button>
             </Fieldset.Actions>
 

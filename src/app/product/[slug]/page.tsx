@@ -1,8 +1,9 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { headers } from "next/headers";
+import { notFound, redirect } from "next/navigation";
+import { auth } from "@/lib/auth";
 import { getProductById } from "@/services/product.service";
 import type { Product } from "@/types/product";
-
 
 interface ProductDetailsPageProps {
   params: Promise<{
@@ -18,6 +19,14 @@ const formatNumber = (value: number) =>
 export default async function ProductDetailsPage({
   params,
 }: ProductDetailsPageProps) {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session?.user) {
+    redirect("/signin");
+  }
+
   const { slug } = await params;
   const id = Number(slug);
 
@@ -40,18 +49,34 @@ export default async function ProductDetailsPage({
     }))
     .sort((a, b) => a.average - b.average);
 
-  const lowestMarket = product.markets.reduce((lowest, market) =>
-    market.min < lowest.min ? market : lowest,
+  const lowestMarket = product.markets.reduce(
+    (lowest, market) =>
+      market.min < lowest.min ? market : lowest,
+    product.markets[0] ?? {
+      market: "",
+      division: "",
+      min: product.today,
+      max: product.today,
+    },
   );
 
-  const highestMarket = product.markets.reduce((highest, market) =>
-    market.max > highest.max ? market : highest,
+  const highestMarket = product.markets.reduce(
+    (highest, market) =>
+      market.max > highest.max ? market : highest,
+    product.markets[0] ?? {
+      market: "",
+      division: "",
+      min: product.today,
+      max: product.today,
+    },
   );
 
   const averagePrice =
     markets.length > 0
-      ? markets.reduce((total, market) => total + market.average, 0) /
-        markets.length
+      ? markets.reduce(
+          (total, market) => total + market.average,
+          0,
+        ) / markets.length
       : 0;
 
   const isUp = product.change.dir === "up";
@@ -79,7 +104,9 @@ export default async function ProductDetailsPage({
 
           <span aria-hidden="true">/</span>
 
-          <span className="font-medium text-gray-800">{product.nameBn}</span>
+          <span className="font-medium text-gray-800">
+            {product.nameBn}
+          </span>
         </nav>
 
         <section className="rounded-2xl border border-[#dce6dd] bg-white p-5 shadow-sm sm:p-8">
@@ -152,10 +179,7 @@ export default async function ProductDetailsPage({
               <p className="text-sm text-gray-500">সর্বনিম্ন দাম</p>
 
               <p className="mt-2 text-2xl font-bold text-gray-900">
-                {formatNumber(
-                  product.markets.length > 0 ? lowestMarket.min : product.today,
-                )}{" "}
-                টাকা
+                {formatNumber(lowestMarket.min)} টাকা
               </p>
 
               <p className="mt-2 text-sm text-gray-500">
@@ -167,12 +191,7 @@ export default async function ProductDetailsPage({
               <p className="text-sm text-gray-500">সর্বাধিক দাম</p>
 
               <p className="mt-2 text-2xl font-bold text-gray-900">
-                {formatNumber(
-                  product.markets.length > 0
-                    ? highestMarket.max
-                    : product.today,
-                )}{" "}
-                টাকা
+                {formatNumber(highestMarket.max)} টাকা
               </p>
 
               <p className="mt-2 text-sm text-gray-500">
@@ -185,7 +204,7 @@ export default async function ProductDetailsPage({
 
               <p className="mt-2 text-2xl font-bold text-gray-900">
                 {formatNumber(
-                  product.markets.length > 0
+                  markets.length > 0
                     ? Math.round(averagePrice)
                     : product.today,
                 )}{" "}
@@ -217,7 +236,9 @@ export default async function ProductDetailsPage({
                     <th className="px-4 py-4 text-right font-semibold">
                       সর্বাধিক
                     </th>
-                    <th className="px-4 py-4 text-right font-semibold">গড়</th>
+                    <th className="px-4 py-4 text-right font-semibold">
+                      গড়
+                    </th>
                   </tr>
                 </thead>
 
@@ -257,6 +278,7 @@ export default async function ProductDetailsPage({
             </p>
           )}
         </section>
+
         <div className="border-t border-[#dce6dd] py-6">
           <Link
             href={`/category/${product.category}`}
