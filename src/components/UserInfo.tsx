@@ -4,12 +4,14 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
+import Image from "next/image";
+import { UserRound, LogOut } from "lucide-react";
 
 const UserInfo = () => {
   const router = useRouter();
-
   const { data: session, isPending } = authClient.useSession();
 
+  const [isOpen, setIsOpen] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
   const [error, setError] = useState("");
 
@@ -21,14 +23,15 @@ const UserInfo = () => {
       const result = await authClient.signOut();
 
       if (result.error) {
-        setError("সাইন আউট করা যায়নি। আবার চেষ্টা করুন।");
+        setError("Logout failed. Please try again.");
         return;
       }
 
+      setIsOpen(false);
       router.replace("/");
       router.refresh();
     } catch {
-      setError("সাইন আউট করা যায়নি। আবার চেষ্টা করুন।");
+      setError("Logout failed. Please try again.");
     } finally {
       setSigningOut(false);
     }
@@ -37,25 +40,25 @@ const UserInfo = () => {
   if (isPending) {
     return (
       <div
-        className="h-10 w-24 animate-pulse rounded-lg bg-gray-100"
-        aria-label="অ্যাকাউন্ট লোড হচ্ছে"
+        className="h-10 w-10 animate-pulse rounded-full bg-gray-100"
+        aria-label="Loading account"
       />
     );
   }
 
   if (!session?.user) {
     return (
-      <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+      <div className="flex items-center gap-2 sm:gap-3">
         <Link
           href="/signin"
-          className="inline-flex items-center justify-center rounded-lg border border-gray-300 px-3 py-2 text-sm font-semibold text-gray-700 transition hover:bg-gray-50 sm:px-4"
+          className="rounded-lg border border-gray-300 px-3 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 sm:px-4"
         >
           সাইন ইন
         </Link>
 
         <Link
           href="/signup"
-          className="inline-flex items-center justify-center rounded-lg bg-[#008a45] px-3 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#007038] sm:px-5"
+          className="rounded-lg bg-[#008a45] px-3 py-2 text-sm font-semibold text-white hover:bg-[#007038] sm:px-5"
         >
           সাইন আপ
         </Link>
@@ -63,34 +66,66 @@ const UserInfo = () => {
     );
   }
 
-  return (
-    <div className="flex min-w-0 items-center gap-2 sm:gap-3">
-      <Link
-        href="/profile"
-        className="min-w-0 max-w-36 rounded-lg px-2 py-2 text-sm font-semibold text-gray-800 transition hover:bg-gray-100 sm:max-w-48 sm:px-3"
-        title={session.user.name || "আমার প্রোফাইল"}
-      >
-        <span className="block truncate">
-          {session.user.name || "আমার প্রোফাইল"}
-        </span>
-      </Link>
+  const user = session.user;
+  const displayName = user.name?.trim() || "ব্যবহারকারী";
+  const initial = displayName.charAt(0).toUpperCase();
 
+  return (
+    <div className="relative">
       <button
         type="button"
-        onClick={handleSignOut}
-        disabled={signingOut}
-        className="inline-flex shrink-0 items-center justify-center rounded-lg border border-gray-300 px-3 py-2 text-sm font-semibold text-gray-700 transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-60 sm:px-4"
+        onClick={() => setIsOpen((previous) => !previous)}
+        aria-label="Open profile menu"
+        aria-expanded={isOpen}
+        className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full border border-gray-200 bg-[#e6f4ec] font-bold text-[#008a45] hover:ring-2 hover:ring-[#008a45]/30"
       >
-        {signingOut ? "অপেক্ষা করুন..." : "সাইন আউট"}
+        {user.image ? (
+          <Image
+            src={user.image}
+            alt="Profile"
+            className="h-full w-full object-cover"
+          />
+        ) : (
+          initial
+        )}
       </button>
 
-      {error && (
-        <p
-          role="alert"
-          className="absolute right-4 top-full mt-1 rounded-md bg-white p-2 text-xs text-red-600 shadow"
-        >
-          {error}
-        </p>
+      {isOpen && (
+        <div className="absolute right-0 top-full z-[60] mt-3 w-72 max-w-[calc(100vw-2rem)] overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg">
+          <div className="border-b border-gray-100 px-4 py-4">
+            <p className="truncate text-sm font-semibold text-gray-900">
+              {displayName}
+            </p>
+            <p className="mt-1 break-all text-xs text-gray-500">{user.email}</p>
+          </div>
+
+          <div className="p-2">
+            <Link
+              href="/profile"
+              onClick={() => setIsOpen(false)}
+              className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-[#e6f4ec] hover:text-[#008a45]"
+            >
+              <UserRound size={18} />
+              আমার প্রোফাইল
+            </Link>
+
+            <button
+              type="button"
+              onClick={handleSignOut}
+              disabled={signingOut}
+              className="flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-left text-sm font-medium text-red-600 hover:bg-red-50 disabled:opacity-60"
+            >
+              <LogOut size={18} />
+              {signingOut ? "অপেক্ষা করুন..." : "সাইন আউট"}
+            </button>
+
+            {error && (
+              <p role="alert" className="px-3 py-2 text-xs text-red-600">
+                {error}
+              </p>
+            )}
+          </div>
+        </div>
       )}
     </div>
   );

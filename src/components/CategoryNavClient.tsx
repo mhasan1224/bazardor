@@ -31,10 +31,10 @@ const CategoryNavClient = ({ navs }: CategoryNavClientProps) => {
               key={item.id}
               href={`/category/${item.slug}`}
               aria-current={isActive ? "page" : undefined}
-              className={`inline-flex shrink-0 items-center gap-1.5 rounded-full px-3 py-2 font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-600 ${
+              className={`inline-flex shrink-0 items-center gap-1.5 rounded h-8 px-2 py-2 font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-600 ${
                 isActive
-                  ? "bg-green-100 text-green-800"
-                  : "text-gray-700 hover:bg-green-50 hover:text-green-700"
+                  ? "bg-green-700 text-white"
+                  : "text-black hover:bg-gray-300 hover:text-black hover:border-gray-200"
               }`}
             >
               <span aria-hidden="true">{item.icon}</span>
