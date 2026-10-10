@@ -33,7 +33,7 @@ const formatUnit = (unit: string): string => {
 };
 
 const MarqueeText = async () => {
-  const res = await fetch("https://api.api-store.workers.dev/api/bazardor/products");
+  const res = await fetch("https://openapi.programming-hero.com/api/bazardor/products");
 
   if (!res.ok) {
     throw new Error(`Failed to fetch products: ${res.status}`);

@@ -4,7 +4,7 @@ const productService = async (
   category?: string,
 ): Promise<Product[]> => {
   const url = new URL(
-    "https://api.api-store.workers.dev/api/bazardor/products",
+    "https://openapi.programming-hero.com/api/bazardor/products",
   );
 
   if (category) {
@@ -26,7 +26,7 @@ export const getProductById = async (
   id: number,
 ): Promise<Product> => {
   const res = await fetch(
-    `https://api.api-store.workers.dev/api/bazardor/products/${id}`,
+    `https://openapi.programming-hero.com/api/bazardor/products/${id}`,
   );
 
   if (!res.ok) {

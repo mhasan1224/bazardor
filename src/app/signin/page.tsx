@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   Button,
-  Description,
   FieldError,
   FieldGroup,
   Fieldset,
@@ -76,7 +75,7 @@ return (
             <TextField isRequired name="email" type="email">
               <Label>ইমেইল</Label>
               <Input
-                autoComplete="email"
+                autoComplete="off"
                 placeholder="you@example.com"
               />
               <FieldError />
@@ -92,7 +91,7 @@ return (
             >
               <Label>পাসওয়ার্ড</Label>
               <Input
-                autoComplete="current-password"
+                autoComplete="off"
                 placeholder="আপনার পাসওয়ার্ড"
               />
               <FieldError />

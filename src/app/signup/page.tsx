@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   Button,
-  Description,
   FieldError,
   FieldGroup,
   Fieldset,
@@ -55,6 +54,7 @@ export default function SignUpPage() {
       }
 
       router.push("/signin");
+      router.refresh();
     } catch {
       setError("কিছু একটা সমস্যা হয়েছে। আবার চেষ্টা করো।");
     } finally {
