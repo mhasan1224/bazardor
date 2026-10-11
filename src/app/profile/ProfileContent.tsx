@@ -1,5 +1,6 @@
 "use client";
 
+import { toast } from "react-toastify";
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
@@ -35,6 +36,11 @@ export default function ProfileContent({
       const result = await updateProfileName(newName);
 
       setMessage(result.message);
+      if (result.success) {
+        toast.success(result.message);
+      } else {
+        toast.error(result.message);
+      }
 
       if (result.success && result.name) {
         setCurrentName(result.name);
@@ -55,6 +61,7 @@ export default function ProfileContent({
         return;
       }
 
+      toast.success("সফলভাবে সাইন আউট হয়েছে!");
       router.replace("/");
       router.refresh();
     } catch {

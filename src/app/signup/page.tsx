@@ -1,5 +1,6 @@
 "use client";
 
+import { toast } from "react-toastify";
 import { Icon } from "@iconify/react";
 import { useState } from "react";
 import Link from "next/link";
@@ -62,16 +63,21 @@ export default function SignUpPage() {
             setLoading(true);
           },
           onSuccess: () => {
+            toast.success("অ্যাকাউন্ট সফলভাবে তৈরি হয়েছে!");
             router.replace("/");
             router.refresh();
           },
           onError: (ctx) => {
-            setError(ctx.error.message || "অ্যাকাউন্ট তৈরি করা যায়নি।");
+            const message = ctx.error.message || "অ্যাকাউন্ট তৈরি করা যায়নি।";
+            setError(message);
+            toast.error(message);
           },
         },
       );
     } catch {
-      setError("অ্যাকাউন্ট তৈরি করা যায়নি। আবার চেষ্টা করুন।");
+      const message = "অ্যাকাউন্ট তৈরি করা যায়নি। আবার চেষ্টা করুন।";
+      setError(message);
+      toast.error(message);
     } finally {
       setLoading(false);
     }
@@ -86,7 +92,9 @@ export default function SignUpPage() {
         callbackURL: "/",
       });
     } catch {
-      setError("Google দিয়ে সাইন ইন করা যায়নি। আবার চেষ্টা করুন।");
+      const message = "Google দিয়ে সাইন ইন করা যায়নি। আবার চেষ্টা করুন।";
+      setError(message);
+      toast.error(message);
     }
   };
 
@@ -99,7 +107,9 @@ export default function SignUpPage() {
         callbackURL: "/",
       });
     } catch {
-      setError("GitHub দিয়ে সাইন ইন করা যায়নি। আবার চেষ্টা করুন।");
+      const message = "GitHub দিয়ে সাইন ইন করা যায়নি। আবার চেষ্টা করুন।";
+      setError(message);
+      toast.error(message);
     }
   };
 

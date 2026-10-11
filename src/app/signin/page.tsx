@@ -1,5 +1,6 @@
 "use client";
 
+import { toast } from "react-toastify";
 import { Icon } from "@iconify/react";
 import { useState } from "react";
 import Link from "next/link";
@@ -32,7 +33,9 @@ export default function SignInPage() {
     const password = String(formData.get("password") ?? "");
 
     if (!email || !password) {
-      setError("ইমেইল ও পাসওয়ার্ড লিখুন।");
+      const message = "ইমেইল ও পাসওয়ার্ড লিখুন।";
+      setError(message);
+      toast.error(message);
       return;
     }
 
@@ -47,13 +50,16 @@ export default function SignInPage() {
         },
         {
           onSuccess: () => {
+            toast.success("সফলভাবে সাইন ইন হয়েছে!");
             router.replace("/");
             router.refresh();
           },
           onError: (context) => {
-            setError(
-              context.error.message || "ইমেইল অথবা পাসওয়ার্ড সঠিক নয়।",
-            );
+            const message =
+              context.error.message || "ইমেইল অথবা পাসওয়ার্ড সঠিক নয়.";
+
+            setError(message);
+            toast.error(message);
           },
         },
       );
@@ -62,7 +68,9 @@ export default function SignInPage() {
         setError(signInError.message || "ইমেইল অথবা পাসওয়ার্ড সঠিক নয়।");
       }
     } catch {
-      setError("সাইন ইন করা যায়নি। আবার চেষ্টা করুন।");
+      const message = "সাইন ইন করা যায়নি। আবার চেষ্টা করুন।";
+      setError(message);
+      toast.error(message);
     } finally {
       setLoading(false);
     }
@@ -77,7 +85,9 @@ export default function SignInPage() {
         callbackURL: "/",
       });
     } catch {
-      setError("Google দিয়ে সাইন ইন করা যায়নি। আবার চেষ্টা করুন।");
+      const message = "সাইন ইন করা যায়নি। আবার চেষ্টা করুন।";
+      setError(message);
+      toast.error(message);
     }
   };
 
@@ -90,7 +100,9 @@ export default function SignInPage() {
         callbackURL: "/",
       });
     } catch {
-      setError("GitHub দিয়ে সাইন ইন করা যায়নি। আবার চেষ্টা করুন।");
+      const message = "সাইন ইন করা যায়নি। আবার চেষ্টা করুন।";
+      setError(message);
+      toast.error(message);
     }
   };
 

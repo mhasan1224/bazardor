@@ -1,4 +1,3 @@
-
 "use server";
 
 import { headers } from "next/headers";
@@ -19,10 +18,10 @@ export async function updateProfileName(name: string) {
 
   const trimmedName = name.trim();
 
-  if (!trimmedName) {
+  if (trimmedName.length < 3) {
     return {
       success: false,
-      message: "নাম লিখুন।",
+      message: "নাম কমপক্ষে ৩ অক্ষরের হতে হবে।",
     };
   }
 

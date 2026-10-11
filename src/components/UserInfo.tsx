@@ -1,5 +1,6 @@
 "use client";
 
+import { toast } from "react-toastify";
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -23,15 +24,20 @@ const UserInfo = () => {
       const result = await authClient.signOut();
 
       if (result.error) {
-        setError("Logout failed. Please try again.");
+        const message = "সাইন আউট করা যায়নি। আবার চেষ্টা করুন।";
+        setError(message);
+        toast.error(message);
         return;
       }
 
       setIsOpen(false);
+      toast.success("সফলভাবে সাইন আউট হয়েছে!");
       router.replace("/");
       router.refresh();
     } catch {
-      setError("Logout failed. Please try again.");
+      const message = "সাইন আউট করা যায়নি। আবার চেষ্টা করুন।";
+      setError(message);
+      toast.error(message);
     } finally {
       setSigningOut(false);
     }

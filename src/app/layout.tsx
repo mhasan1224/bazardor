@@ -3,6 +3,8 @@ import { Hind_Siliguri} from "next/font/google";
 import "./globals.css";
 import Header from "../components/Header";
 import Footer from "@/components/Footer";
+import ToastProvider from "@/components/ToastProvider";
+import "react-toastify/dist/ReactToastify.css";
 
 const HindSiliguri = Hind_Siliguri({
   subsets: ["latin" , "bengali"],
@@ -25,6 +27,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <Header />
         {children}
         <Footer />
+        <ToastProvider />
       </body>
     </html>
   );
