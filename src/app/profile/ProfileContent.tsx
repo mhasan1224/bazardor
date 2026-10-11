@@ -1,12 +1,11 @@
 "use client";
 
-import { toast } from "react-toastify";
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { toast } from "react-toastify";
+import { LogOut, Pencil } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
-import { updateProfileName } from "./actions";
-import Image from "next/image";
-import { LogOut } from "lucide-react";
 
 interface ProfileContentProps {
   name: string;
@@ -20,136 +19,92 @@ export default function ProfileContent({
   image,
 }: ProfileContentProps) {
   const router = useRouter();
-  const [currentName, setCurrentName] = useState(name);
-  const [newName, setNewName] = useState(name);
+  const [isLoggingOut, startLogoutTransition] = useTransition();
   const [message, setMessage] = useState("");
-  const [isPending, startTransition] = useTransition();
-  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
-  const displayName = currentName.trim() || "ব্যবহারকারী";
-
-  const handleUpdate = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const handleSignOut = () => {
     setMessage("");
 
-    startTransition(async () => {
-      const result = await updateProfileName(newName);
-
-      setMessage(result.message);
-      if (result.success) {
-        toast.success(result.message);
-      } else {
-        toast.error(result.message);
-      }
-
-      if (result.success && result.name) {
-        setCurrentName(result.name);
-        setNewName(result.name);
-        router.refresh();
+    startLogoutTransition(async () => {
+      try {
+        await authClient.signOut({
+          fetchOptions: {
+            onSuccess: () => {
+              toast.success("সফলভাবে সাইন আউট হয়েছে।");
+              router.replace("/");
+              router.refresh();
+            },
+            onError: () => {
+              setMessage("সাইন আউট করা যায়নি। আবার চেষ্টা করুন।");
+            },
+          },
+        });
+      } catch {
+        setMessage("সাইন আউট করা যায়নি। আবার চেষ্টা করুন।");
       }
     });
   };
 
-  const handleLogout = async () => {
-    setIsLoggingOut(true);
-
-    try {
-      const result = await authClient.signOut();
-
-      if (result.error) {
-        setMessage("Logout করা যায়নি। আবার চেষ্টা করুন।");
-        return;
-      }
-
-      toast.success("সফলভাবে সাইন আউট হয়েছে!");
-      router.replace("/");
-      router.refresh();
-    } catch {
-      setMessage("Logout করা যায়নি। আবার চেষ্টা করুন।");
-    } finally {
-      setIsLoggingOut(false);
-    }
-  };
-
   return (
-    <div className="mt-7 space-y-6">
-      <section className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm sm:p-7">
-        <div className="flex items-center gap-4">
-          <div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-full border border-gray-200 bg-[#e6f4ec] text-xl font-bold text-[#008a45] sm:h-20 sm:w-20">
-            {image ? (
-              <Image
-                src={image}
-                alt="Profile avatar"
-                height={100}
-                width={100}
-                className="h-full w-full object-cover"
-              />
-            ) : (
-              displayName.charAt(0).toUpperCase()
-            )}
-          </div>
-
-          <div className="min-w-0 flex-1">
-            <h2 className="truncate text-base font-bold text-gray-900 sm:text-lg">
-              {displayName}
-            </h2>
-            <p className="mt-1 break-all text-sm text-gray-500">{email}</p>
-          </div>
-
-          <button
-            type="button"
-            onClick={handleLogout}
-            disabled={isLoggingOut}
-            className="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg border border-red-500 bg-white px-4 py-2.5 text-sm font-semibold text-red-600 shadow-sm transition-colors hover:text-white hover:bg-red-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 sm:px-5"
-          >
-            <LogOut size={17} />
-            {isLoggingOut ? "অপেক্ষা করুন..." : "সাইন আউট"}
-          </button>
-        </div>
-      </section>
-
-      <section className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm sm:p-7">
-        <h2 className="text-lg font-bold text-gray-900">তথ্য</h2>
-
-        <form onSubmit={handleUpdate} className="mt-5 space-y-3">
-          <label
-            htmlFor="profile-name"
-            className="block text-sm font-medium text-gray-700"
-          >
-            নাম
-          </label>
-
-          <input
-            id="profile-name"
-            type="text"
-            value={newName}
-            onChange={(event) => setNewName(event.target.value)}
-            placeholder="আপনার নাম লিখুন"
-            maxLength={100}
-            required
-            className="block w-full rounded-lg border border-gray-300 px-4 py-3 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-[#008a45] focus:ring-2 focus:ring-[#008a45]/20"
-          />
-
-          <button
-            type="submit"
-            disabled={isPending || !newName.trim()}
-            className="block w-full rounded-lg bg-[#008a45] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#007038] disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            {isPending ? "আপডেট হচ্ছে..." : "Update"}
-          </button>
-
-          {message && (
-            <p
-              role="status"
-              className={`text-sm ${
-                message.includes("সফলভাবে") ? "text-green-700" : "text-red-600"
-              }`}
-            >
-              {message}
-            </p>
+    <section className="mt-7 rounded-2xl border border-[#dce6dd] bg-white p-5 shadow-sm sm:p-7">
+      <div className="flex flex-col justify-between gap-5 border-b border-gray-100 pb-6 sm:flex-row sm:items-center">
+        <div className="flex flex-col items-center gap-4 sm:flex-row">
+          {image ? (
+            <img
+              src={image}
+              alt="Profile"
+              className="h-20 w-20 rounded-full object-cover"
+            />
+          ) : (
+            <div className="flex h-20 w-20 items-center justify-center rounded-full bg-[#e5f3e9] text-3xl font-bold text-[#008a45]">
+              {name.trim().charAt(0).toUpperCase() || "U"}
+            </div>
           )}
-        </form>
-      </section>
-    </div>
+
+          <div className="text-center sm:text-left">
+            <h2 className="text-xl font-bold text-gray-900">
+              {name || "ব্যবহারকারী"}
+            </h2>
+            <p className="mt-1 break-all text-sm text-gray-600">
+              {email}
+            </p>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          onClick={handleSignOut}
+          disabled={isLoggingOut}
+          className="flex shrink-0 items-center justify-center gap-2 rounded-lg border border-red-200 px-4 py-2 text-sm font-semibold text-red-600 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          <LogOut size={18} />
+          {isLoggingOut ? "সাইন আউট হচ্ছে..." : "সাইন আউট"}
+        </button>
+      </div>
+
+      <div className="mt-6">
+        <h3 className="text-lg font-bold text-gray-900">
+          ব্যক্তিগত তথ্য
+        </h3>
+
+        <p className="mt-2 text-sm text-gray-600">
+          আপনার অ্যাকাউন্টের নাম পরিবর্তন করতে নিচের বাটনে ক্লিক করুন।
+        </p>
+
+        <Link
+          href="/profile/update"
+          className="mt-5 flex w-full items-center justify-center gap-2 rounded-lg bg-[#008a45] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#007038]"
+        >
+          <Pencil size={18} />
+          Update Information
+        </Link>
+      </div>
+
+      {message && (
+        <p role="alert" className="mt-4 text-sm text-red-600">
+          {message}
+        </p>
+      )}
+    </section>
   );
 }
