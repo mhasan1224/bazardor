@@ -25,7 +25,7 @@ const Banner = () => {
             {/* Content */}
             <div className="w-full text-left lg:max-w-xl">
               {/* Date Badge */}
-              <div className="mb-6 inline-block rounded-full bg-[#e1efe6] px-4 py-1.5 text-xs font-medium text-[#1e613b] sm:text-sm">
+              <div className="mb-6 inline-block rounded-full bg-[#e1efe6] px-4 py-1.5 text-2xl font-semibold text-[#1e613b] sm:text-base">
                 {date}
               </div>
 

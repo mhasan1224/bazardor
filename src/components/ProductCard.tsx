@@ -9,6 +9,19 @@ const formatBengaliNumber = (value: number): string => {
   return new Intl.NumberFormat("bn-BD").format(value);
 };
 
+const formatUnit = (unit: string): string => {
+  const units: Record<string, string> = {
+    kg: "কেজি",
+    gram: "গ্রাম",
+    liter: "লিটার",
+    litre: "লিটার",
+    pcs: "টি",
+    piece: "টি",
+    dozen: "ডজন",
+    maund: "মণ",
+  };
+  return units[unit.toLowerCase()] ?? unit;
+};
 const ProductCard = ({ product }: ProductCardProps) => {
   const isUp = product.change.dir === "up";
   const isDown = product.change.dir === "down";
@@ -29,7 +42,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
   return (
     <Link
       href={`/product/${product.id}`}
-      aria-label={`${product.nameBn}, আজকের দাম ${formatBengaliNumber(product.today)} টাকা প্রতি ${product.unit}`}
+      aria-label={`${product.nameBn}, আজকের দাম ${formatBengaliNumber(product.today)} টাকা প্রতি ${formatUnit(product.unit)}`}
       className="group block rounded-xl border border-[#dce6dd] bg-white p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-green-300 hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
     >
       <div className="flex items-center gap-3">
@@ -45,15 +58,13 @@ const ProductCard = ({ product }: ProductCardProps) => {
             {product.nameBn}
           </h3>
 
-          <p className="mt-1 text-xs text-gray-500">
-            প্রতি {product.unit}
-          </p>
+          <p className="mt-1 text-xs text-gray-500">প্রতি {formatUnit(product.unit)}</p>
         </div>
       </div>
 
-      <div className="mt-4 flex items-end justify-between gap-2 border-t border-gray-100 pt-3">
+      <div className="mt-4 flex items-end justify-between gap-2 pt-3">
         <div className="min-w-0">
-          <p className="text-xs text-gray-500">আজকের দাম</p>
+          <p className="text-base text-gray-500">আজকের দাম</p>
 
           <p className="mt-1 text-base font-bold text-[#17231a] sm:text-lg">
             {formatBengaliNumber(product.today)} টাকা
@@ -69,7 +80,6 @@ const ProductCard = ({ product }: ProductCardProps) => {
           ) : (
             <span aria-hidden="true">{isUp ? "▲" : "▼"}</span>
           )}
-
           {formatBengaliNumber(product.change.pct)}%
         </span>
       </div>

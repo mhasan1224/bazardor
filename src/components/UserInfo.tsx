@@ -51,7 +51,7 @@ const UserInfo = () => {
       <div className="flex items-center gap-2 sm:gap-3">
         <Link
           href="/signin"
-          className="rounded-lg border border-gray-300 px-3 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 sm:px-4"
+          className="rounded-lg px-3 py-2 text-sm font-semibold text-black hover:bg-gray-300 sm:px-4"
         >
           সাইন ইন
         </Link>

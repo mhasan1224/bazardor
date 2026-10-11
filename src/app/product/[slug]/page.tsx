@@ -120,13 +120,7 @@ export default async function ProductDetailsPage({
               </p>
 
               <p
-                className={`mt-4 text-sm font-medium ${
-                  isFlat
-                    ? "text-gray-500"
-                    : isUp
-                      ? "text-red-600"
-                      : "text-green-700"
-                }`}
+                className={`mt-4 text-sm font-medium text-gray-600`}
               >
                 গতকালের তুলনায় আজ দাম{" "}
                 <strong>
@@ -173,11 +167,11 @@ export default async function ProductDetailsPage({
               <div className="rounded-xl border border-[#dce6dd] bg-white p-5">
                 <p className="text-sm text-gray-500">সর্বনিম্ন দাম</p>
 
-                <p className="mt-2 text-2xl font-bold text-green-800">
-                  {formatNumber(lowestMarket.min)} টাকা
+                <p className="mt-2 text-2xl font-bold text-green-500">
+                  {formatNumber(lowestMarket.min)} <span className="mt-1 text-sm font-medium text-green-500">টাকা</span>
                 </p>
 
-                <p className="mt-2 text-sm text-gray-500">
+                <p className="mt-2 text-gray-500">
                   সবচেয়ে কম দামের বাজার
                 </p>
               </div>
@@ -186,10 +180,10 @@ export default async function ProductDetailsPage({
                 <p className="text-sm text-gray-500">সর্বাধিক দাম</p>
 
                 <p className="mt-2 text-2xl font-bold text-red-600">
-                  {formatNumber(highestMarket.max)} টাকা
+                  {formatNumber(highestMarket.max)} <span className="mt-1 text-sm font-medium text-red-500">টাকা</span>
                 </p>
 
-                <p className="mt-2 text-sm text-gray-500">
+                <p className="mt-2 text-gray-500">
                   সবচেয়ে বেশি দামের বাজার
                 </p>
               </div>
@@ -203,10 +197,10 @@ export default async function ProductDetailsPage({
                       ? Math.round(averagePrice)
                       : product.today,
                   )}{" "}
-                  টাকা
+                  <span className="mt-1 text-sm font-medium text-green-500">টাকা</span>
                 </p>
 
-                <p className="mt-2 text-sm text-gray-500">
+                <p className="mt-2 text-gray-500">
                   প্রতি {product.unit === "kg" ? "কেজি" : product.unit}-এর
                   হিসাবে
                 </p>
@@ -222,17 +216,17 @@ export default async function ProductDetailsPage({
             {markets.length > 0 ? (
               <div className="overflow-x-auto rounded-xl border border-[#dce6dd]">
                 <table className="w-full min-w-[680px] text-left text-sm">
-                  <thead className="bg-white text-gray-800">
+                  <thead className="bg-white text-gray-600">
                     <tr>
-                      <th className="px-4 py-4 font-semibold">বাজার</th>
-                      <th className="px-4 py-4 font-semibold">বিভাগ</th>
-                      <th className="px-4 py-4 text-right font-semibold">
+                      <th className="px-4 py-4 text-xl font-semibold">বাজার</th>
+                      <th className="px-4 py-4 text-xl font-semibold">বিভাগ</th>
+                      <th className="px-4 py-4 text-xl text-right font-semibold">
                         সর্বনিম্ন
                       </th>
-                      <th className="px-4 py-4 text-right font-semibold">
+                      <th className="px-4 py-4 text-xl text-right font-semibold">
                         সর্বাধিক
                       </th>
-                      <th className="px-4 py-4 text-right font-semibold">
+                      <th className="px-4 py-4 text-xl text-right font-semibold">
                         গড়
                       </th>
                     </tr>
@@ -246,7 +240,7 @@ export default async function ProductDetailsPage({
                           index % 2 === 0 ? "bg-white" : "bg-[#f0f7f0]"
                         }`}
                       >
-                        <td className="px-4 py-4 font-semibold text-gray-800">
+                        <td className="px-4 py-4 font-medium text-gray-800">
                           {market.market}
                         </td>
 
@@ -254,15 +248,15 @@ export default async function ProductDetailsPage({
                           {market.division}
                         </td>
 
-                        <td className="px-4 py-4 text-right text-gray-700">
+                        <td className="px-4 py-4 text-right text-gray-800">
                           {formatNumber(market.min)} টাকা
                         </td>
 
-                        <td className="px-4 py-4 text-right text-gray-700">
+                        <td className="px-4 py-4 text-right text-gray-800">
                           {formatNumber(market.max)} টাকা
                         </td>
 
-                        <td className="px-4 py-4 text-right font-bold text-gray-900">
+                        <td className="px-4 py-4 text-right font-semibold text-gray-900">
                           {formatNumber(market.average)} টাকা
                         </td>
                       </tr>
@@ -278,10 +272,10 @@ export default async function ProductDetailsPage({
           </div>
         </section>
 
-        <div className="border-t border-[#dce6dd] py-6">
+        <div className="border-[#dce6dd] py-6">
           <Link
             href={`/category/${product.category}`}
-            className="inline-flex items-center gap-2 rounded-lg bg-[#008a45] px-5 py-3 font-semibold text-white shadow-sm transition hover:bg-[#007038] focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+            className="inline-flex items-center gap-2 rounded-lg bg-[#f8faf8] px-5 py-3 font-semibold text-black shadow-sm transition hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
           >
             <span aria-hidden="true">{product.categoryIcon}</span>
             <span>{product.categoryNameBn}</span>
