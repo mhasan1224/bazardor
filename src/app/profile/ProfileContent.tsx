@@ -73,6 +73,8 @@ export default function ProfileContent({
               <Image
                 src={image}
                 alt="Profile avatar"
+                height={100}
+                width={100}
                 className="h-full w-full object-cover"
               />
             ) : (

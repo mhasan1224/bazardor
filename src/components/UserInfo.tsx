@@ -83,6 +83,8 @@ const UserInfo = () => {
           <Image
             src={user.image}
             alt="Profile"
+            height={100}
+            width={100}
             className="h-full w-full object-cover"
           />
         ) : (

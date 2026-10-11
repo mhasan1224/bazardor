@@ -6,13 +6,3 @@ install lucide-react: npm install lucide-react
 install better-auth & mongodb: npm install better-auth mongodb
 install mongodb adaptar: npm install @better-auth/mongo-adapter
 install iconify: npm install @iconify/react
-
-
-
-
-
-Authentication Method: Password
-
-Username: bazardor_user_auth
-
-Password: itXdXfLYzlahFeW6
