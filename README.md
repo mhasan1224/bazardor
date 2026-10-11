@@ -60,10 +60,9 @@ Make sure you have the following installed:
 ### 1. Clone the Repository
 
 ```bash
-git clone YOUR_GITHUB_REPOSITORY_URL
+git clone https://github.com/mhasan1224/bazardor
 ```
 
-Replace `YOUR_GITHUB_REPOSITORY_URL` with your actual GitHub repository URL.
 
 ### 2. Navigate to the Project
 
@@ -79,7 +78,7 @@ npm install
 
 ### 4. Configure Environment Variables
 
-Create a `.env.local` file in the project root directory.
+Create a `.env` file in the project root directory.
 
 Add the following variables with your own credentials:
 
@@ -149,6 +148,8 @@ bazardor/
 ├── public/
 ├── src/
 │   ├── app/
+│   │   ├── api/
+│   │   │   └── auth/
 │   │   ├── category/
 │   │   ├── product/
 │   │   ├── profile/
@@ -163,8 +164,9 @@ bazardor/
 │   ├── lib/
 │   ├── services/
 │   └── types/
-├── .env.local
+├── .gitignore
 ├── package.json
+├── package-lock.json
 └── README.md
 ```
 
